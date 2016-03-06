@@ -3,4 +3,4 @@ Aplikacja Xamarin do zarzadzania codziennymi zadaniami z wykorzystaniem metodolo
 
 Wiecej: http://programuje.net/tag/dajsiepoznac/ 
 
-Projekt do konkursu "Daj sie poznac 2016" dajsiepoznac.pl
+Projekt do konkursu "Daj sie poznac 2016" http://dajsiepoznac.pl
