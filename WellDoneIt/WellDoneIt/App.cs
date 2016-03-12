@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using WellDoneIt.ViewModel;
+using WellDoneIt.Views;
 using Xamarin.Forms;
 
 namespace WellDoneIt
@@ -11,20 +12,14 @@ namespace WellDoneIt
     {
         public App()
         {
-            // The root page of your application
-            MainPage = new ContentPage
-            {
-                Content = new StackLayout
-                {
-                    VerticalOptions = LayoutOptions.Center,
-                    Children = {
-                        new Label {
-                            XAlign = TextAlignment.Center,
-                            Text = "WellDoneIt First Commit!"
-                        }
-                    }
-                }
-            };
+            MainPage = new NavigationPage(new MainPage());
+            
+        }
+
+        private static readonly ViewModelLocator _locator = new ViewModelLocator();
+        public static ViewModelLocator Locator
+        {
+            get { return _locator; }
         }
 
         protected override void OnStart()
