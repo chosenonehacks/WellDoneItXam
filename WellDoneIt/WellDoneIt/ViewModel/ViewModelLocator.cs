@@ -30,14 +30,25 @@ namespace WellDoneIt.ViewModel
 
             // ViewModels
             SimpleIoc.Default.Register<MainViewModel>();
+            SimpleIoc.Default.Register<ListViewModel>();
 
             // Services
             //Here we will be registering services to IOC
         }
+
+        public const string MainPage = "MainPage";
+        public const string ListPage = "ListPage";
+
         
         public MainViewModel Main
         {
             get { return ServiceLocator.Current.GetInstance<MainViewModel>(); }
+        }
+
+        
+        public ListViewModel List
+        {
+            get { return ServiceLocator.Current.GetInstance<ListViewModel>(); }
         }
 
         public static void Cleanup()

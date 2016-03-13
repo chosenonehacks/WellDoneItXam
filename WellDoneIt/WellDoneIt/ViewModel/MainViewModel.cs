@@ -1,4 +1,8 @@
+using System;
+using System.Windows.Input;
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Views;
 
 namespace WellDoneIt.ViewModel
 {
@@ -16,13 +20,25 @@ namespace WellDoneIt.ViewModel
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
-        /// <summary>
-        /// Initializes a new instance of the MainViewModel class.
-        /// </summary>
-        public MainViewModel()
+        private readonly INavigationService _navigationService;
+        public MainViewModel(INavigationService navigationService)
         {
             Title = "WellDoneIt";
+
+            if (navigationService == null) throw new ArgumentNullException("navigationService");
+            _navigationService = navigationService;
+
+            NavigationCommand = new RelayCommand<string>((parameter) => Navigate(parameter));
+
         }
+
+        private void Navigate(string parameter)
+        {
+            _navigationService.NavigateTo(ViewModelLocator.ListPage, parameter ?? string.Empty);
+        }
+
+        public RelayCommand<string> NavigationCommand { get; private set; }
+        
 
         public string Title { get; set; }
         
