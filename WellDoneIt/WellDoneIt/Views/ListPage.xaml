@@ -1,9 +1,32 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="WellDoneIt.Views.ListPage">
+             x:Class="WellDoneIt.Views.ListPage" Title="Lists">
+  <ContentPage.ToolbarItems>
+    <ToolbarItem Text="Add" 
+                 Icon="add64.png"
+                 Command="{Binding AddNewTaskCommand}"
+                 Order="Primary"/>
+  </ContentPage.ToolbarItems>
+  
   <StackLayout>
-    <Label Text="{Binding ParameterText}" VerticalOptions="Center" HorizontalOptions="Center" />
-    <Button Text="Go Back" Command="{Binding NavigationBackCommand}"/>
+    <!--<Label Text="{Binding ParameterText}" VerticalOptions="Center" HorizontalOptions="Center" />
+    <Button Text="Go Back" Command="{Binding NavigationBackCommand}"/>-->
+    <ListView ItemsSource="{Binding WellDoneItList}" >
+      <ListView.ItemTemplate>
+        <DataTemplate>
+          <ViewCell >
+            <Grid Padding="16,12">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+              </Grid.ColumnDefinitions>
+              <Label Text="{Binding Title}" FontSize="16" Style="{DynamicResource ListItemTextStyle}" VerticalTextAlignment="Center" HorizontalOptions="StartAndExpand"/>
+              <Image Grid.Column="1" HorizontalOptions="End"  Source="check.png" />
+            </Grid>
+          </ViewCell>
+        </DataTemplate>
+      </ListView.ItemTemplate>
+    </ListView>
   </StackLayout>
 </ContentPage>

@@ -15,6 +15,8 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
+using Microsoft.WindowsAzure.MobileServices;
+using WellDoneIt.Services;
 
 namespace WellDoneIt.ViewModel
 {
@@ -28,12 +30,17 @@ namespace WellDoneIt.ViewModel
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
+            // Services
+            //Here we will be registering services to IOC
+            
+            SimpleIoc.Default.Register<IWellDoneItMobileService, WellDoneItMobileService>();
+            SimpleIoc.Default.Register<IAzureDataService, AzureDataService>();
+
             // ViewModels
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<ListViewModel>();
 
-            // Services
-            //Here we will be registering services to IOC
+            
         }
 
         public const string MainPage = "MainPage";

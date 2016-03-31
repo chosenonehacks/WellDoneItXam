@@ -1,9 +1,11 @@
 ﻿{
   "dependencies": {
+    "Microsoft.Azure.Mobile.Client.SQLiteStore": "2.0.1",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.0.0",
     "MvvmLight": "5.2.0",
     "MvvmLightLibs": "5.2.0",
-    "Xamarin.Forms": "2.1.0.6526"
+    "Refractored.MvvmHelpers": "1.0.1",
+    "Xamarin.Forms": "2.1.0.6529"
   },
   "frameworks": {
     "uap10.0": {}
