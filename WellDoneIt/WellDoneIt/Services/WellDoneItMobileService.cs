@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.MobileServices;
@@ -14,7 +15,7 @@ namespace WellDoneIt.Services
     {
         
         private MobileServiceCollection<WellDoneItTask, WellDoneItTask> _items;
-        private IMobileServiceTable<WellDoneItTask> _wellDoneItTaskTable;
+        //private IMobileServiceTable<WellDoneItTask> _wellDoneItTaskTable;
         private IMobileServiceSyncTable<WellDoneItTask> _wellDoneItTaskSyncTable;
 
         public MobileServiceClient MobileService { get; set; }
@@ -29,17 +30,17 @@ namespace WellDoneIt.Services
             MobileService = new MobileServiceClient("http://welldoneit.azurewebsites.net");
 
 
-            //const string path = "syncstore.db";
+            const string path = "syncstore.db";
 
             //setup our local sqlite store and intialize our table
-            //var store = new MobileServiceSQLiteStore(path);
-            //store.DefineTable<WellDoneItTask>();
-            //await MobileService.SyncContext.InitializeAsync(store, new MobileServiceSyncHandler());
+            var store = new MobileServiceSQLiteStore(path);
+            store.DefineTable<WellDoneItTask>();
+            await MobileService.SyncContext.InitializeAsync(store, new MobileServiceSyncHandler());
 
             //Get our sync table that will call out to azure
-            //_wellDoneItTaskSyncTable = MobileService.GetSyncTable<WellDoneItTask>();
+            _wellDoneItTaskSyncTable = MobileService.GetSyncTable<WellDoneItTask>();
 
-            _wellDoneItTaskTable = MobileService.GetTable<WellDoneItTask>();
+            //_wellDoneItTaskTable = MobileService.GetTable<WellDoneItTask>();
 
             _isInitialized = true;
         }
@@ -48,9 +49,10 @@ namespace WellDoneIt.Services
         public async Task<IEnumerable<WellDoneItTask>> GetWellDoneItTasks()
         {
             await Initialize();
-            
-            return await _wellDoneItTaskTable.OrderBy(c => c.DateUtc).ToEnumerableAsync();
-            //return await _wellDoneItTaskSyncTable.OrderBy(c => c.DateUtc).ToEnumerableAsync();
+            await SyncTaks();
+
+            //return await _wellDoneItTaskTable.OrderBy(c => c.DateUtc).ToEnumerableAsync();
+            return await _wellDoneItTaskSyncTable.OrderBy(c => c.DateUtc).ToEnumerableAsync();
             
         }
 
@@ -63,9 +65,25 @@ namespace WellDoneIt.Services
                 Complete = false
             };
 
-            await _wellDoneItTaskTable.InsertAsync(wellDoneItTask);
-            //await _wellDoneItTaskSyncTable.InsertAsync(wellDoneItTask);
+            //await _wellDoneItTaskTable.InsertAsync(wellDoneItTask);
+            await _wellDoneItTaskSyncTable.InsertAsync(wellDoneItTask);
 
+            await SyncTaks();
+        }
+
+        public async Task SyncTaks()
+        {
+            
+            try
+            {
+                //pull down all latest changes and then push current tasks up
+                await _wellDoneItTaskSyncTable.PullAsync("allTasks", _wellDoneItTaskSyncTable.CreateQuery());
+                await MobileService.SyncContext.PushAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Unable to sync tasks, that is alright as we have offline capabilities: " + ex);
+            }
         }
     }
 }
