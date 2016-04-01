@@ -38,12 +38,15 @@ namespace WellDoneIt.ViewModel
         private async Task LoadTasks()
         {
              var tasks = await _wellDoneItMobileService.GetWellDoneItTasks();
-            WellDoneItList.AddRange(tasks);
+
+            WellDoneItList.ReplaceRange(tasks);
         }
 
         private async Task NewTask()
         {
             await _wellDoneItMobileService.AddWellDoneItTask();
+
+            await LoadTasks();
         }
 
         public ObservableRangeCollection<WellDoneItTask> WellDoneItList { get; set; } = new ObservableRangeCollection<WellDoneItTask>();
