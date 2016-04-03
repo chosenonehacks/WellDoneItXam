@@ -8,9 +8,12 @@ namespace WellDoneIt.Services
 {
     public interface IWellDoneItMobileService
     {
+        Task Initialize();
+
         Task<IEnumerable<WellDoneItTask>>GetWellDoneItTasks();
 
         Task AddWellDoneItTask();
 
+        Task SyncTaks();
     }
 }

@@ -15,7 +15,7 @@ namespace WellDoneIt.Services
     {
         
         private MobileServiceCollection<WellDoneItTask, WellDoneItTask> _items;
-        //private IMobileServiceTable<WellDoneItTask> _wellDoneItTaskTable;
+        
         private IMobileServiceSyncTable<WellDoneItTask> _wellDoneItTaskSyncTable;
 
         public MobileServiceClient MobileService { get; set; }
@@ -27,10 +27,9 @@ namespace WellDoneIt.Services
             if (_isInitialized)
                 return;
             //Create our client
-            MobileService = new MobileServiceClient("http://welldoneit.azurewebsites.net");
+            MobileService = new MobileServiceClient("http://welldoneitmobileapp.azurewebsites.net");
 
-
-            const string path = "syncstore.db";
+            const string path = "syncstore1.db";
 
             //setup our local sqlite store and intialize our table
             var store = new MobileServiceSQLiteStore(path);
@@ -50,14 +49,14 @@ namespace WellDoneIt.Services
         {
             await Initialize();
             await SyncTaks();
-
-            //return await _wellDoneItTaskTable.OrderBy(c => c.DateUtc).ToEnumerableAsync();
-            return await _wellDoneItTaskSyncTable.OrderBy(c => c.DateUtc).ToEnumerableAsync();
             
+            return await _wellDoneItTaskSyncTable.OrderBy(c => c.DateUtc).ToEnumerableAsync();
         }
 
         public async Task AddWellDoneItTask()
         {
+            await Initialize();
+
             var wellDoneItTask = new WellDoneItTask
             {
                 DateUtc = DateTime.UtcNow,
@@ -65,7 +64,6 @@ namespace WellDoneIt.Services
                 Complete = false
             };
 
-            //await _wellDoneItTaskTable.InsertAsync(wellDoneItTask);
             await _wellDoneItTaskSyncTable.InsertAsync(wellDoneItTask);
 
             await SyncTaks();

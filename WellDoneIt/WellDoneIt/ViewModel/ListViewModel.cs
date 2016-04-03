@@ -31,8 +31,6 @@ namespace WellDoneIt.ViewModel
             _wellDoneItMobileService = wellDoneItMobileService;
 
             LoadTaskCommand.Execute(null);
-
-
         }
 
         private async Task LoadTasks()
