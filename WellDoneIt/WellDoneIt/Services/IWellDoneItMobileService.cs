@@ -14,6 +14,8 @@ namespace WellDoneIt.Services
 
         Task AddWellDoneItTask();
 
-        Task SyncTaks();
+        Task UpdateWellDoneItTask(WellDoneItTask task);
+
+        Task SyncTasks();
     }
 }

@@ -34,7 +34,6 @@ namespace WellDoneIt.ViewModel
             //Here we will be registering services to IOC
             
             SimpleIoc.Default.Register<IWellDoneItMobileService, WellDoneItMobileService>();
-            SimpleIoc.Default.Register<IAzureDataService, AzureDataService>();
 
             // ViewModels
             SimpleIoc.Default.Register<MainViewModel>();

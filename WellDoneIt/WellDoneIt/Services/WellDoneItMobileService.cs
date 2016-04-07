@@ -29,7 +29,7 @@ namespace WellDoneIt.Services
             //Create our client
             MobileService = new MobileServiceClient("http://welldoneitmobileapp.azurewebsites.net");
 
-            const string path = "syncstore1.db";
+            const string path = "syncstore.db";
 
             //setup our local sqlite store and intialize our table
             var store = new MobileServiceSQLiteStore(path);
@@ -48,9 +48,10 @@ namespace WellDoneIt.Services
         public async Task<IEnumerable<WellDoneItTask>> GetWellDoneItTasks()
         {
             await Initialize();
-            await SyncTaks();
+            await SyncTasks();
             
-            return await _wellDoneItTaskSyncTable.OrderBy(c => c.DateUtc).ToEnumerableAsync();
+            //return all tasks that are not completed
+            return await _wellDoneItTaskSyncTable.Where(t => !t.Complete).OrderBy(c => c.DateUtc).ToEnumerableAsync();
         }
 
         public async Task AddWellDoneItTask()
@@ -66,12 +67,18 @@ namespace WellDoneIt.Services
 
             await _wellDoneItTaskSyncTable.InsertAsync(wellDoneItTask);
 
-            await SyncTaks();
+            await SyncTasks();
         }
 
-        public async Task SyncTaks()
+        public async Task UpdateWellDoneItTask(WellDoneItTask task)
         {
-            
+            await _wellDoneItTaskSyncTable.UpdateAsync(task);
+
+            await SyncTasks();
+        }
+
+        public async Task SyncTasks()
+        {
             try
             {
                 //pull down all latest changes and then push current tasks up

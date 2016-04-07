@@ -23,6 +23,7 @@ namespace WellDoneIt.ViewModel
             NavigationBackCommand = new RelayCommand(() => NavigateBack());
             AddNewTaskCommand = new RelayCommand(async () => await NewTask());
             LoadTaskCommand = new RelayCommand(async () => await LoadTasks());
+            CompleteTaskCommand = new RelayCommand<WellDoneItTask>(async (p) => await CompleteTasks(p));
 
             if (navigationService == null) throw new ArgumentNullException("navigationService");
             _navigationService = navigationService;
@@ -31,6 +32,15 @@ namespace WellDoneIt.ViewModel
             _wellDoneItMobileService = wellDoneItMobileService;
 
             LoadTaskCommand.Execute(null);
+        }
+
+        private async Task CompleteTasks(WellDoneItTask wellDoneItTask)
+        {
+            wellDoneItTask.Complete = true;
+
+            await _wellDoneItMobileService.UpdateWellDoneItTask(wellDoneItTask);
+
+            await LoadTasks();
         }
 
         private async Task LoadTasks()
@@ -85,5 +95,7 @@ namespace WellDoneIt.ViewModel
         public RelayCommand AddNewTaskCommand { get; private set; }
 
         public RelayCommand LoadTaskCommand { get; private set; }
+
+        public RelayCommand<WellDoneItTask> CompleteTaskCommand { get; private set; }
     }
 }
