@@ -1,3 +1,5 @@
+UWAGA REPO ZMIENIONE NA : https://github.com/xorch/WellDoneItXamFresh 
+
 # WellDoneItXam
 Aplikacja Xamarin do zarzadzania codziennymi zadaniami z wykorzystaniem metodologii GTD
 
